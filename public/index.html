@@ -157,6 +157,9 @@ section{padding:96px 0}
 .opt .p{font-family:var(--display);font-size:22px;color:var(--red)}
 .opt .p small{font-family:var(--body);font-size:12px;color:var(--soft);font-weight:600}
 .opt .d{font-size:13px;color:var(--soft)}
+.opt .mini{display:grid;gap:3px;margin-top:6px;font-size:13px}
+.opt .mini>span{display:flex;justify-content:space-between;gap:10px;border-top:1px dashed var(--line);padding-top:3px}
+.opt .mini b{color:var(--red);white-space:nowrap;font-variant-numeric:tabular-nums}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:2px solid var(--ink);background:var(--white);border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:600;font-size:14px}
 .chip[aria-pressed="true"]{background:var(--ink);color:#fff}
@@ -447,7 +450,7 @@ function addonText(a){return a.kind==="hourly"?`${A.addons[a.id]} × ${a.name.to
 function ask(k){
   switch(k){
     case"type":return"Hi, I'm Chef Yos 👩🏾‍🍳 Welcome to my kitchen! Want me cooking for you every week, or just for one special day?";
-    case"service":return A.type==="monthly"?"Love that. A chef on call every week 🙌🏾 How often should I come through?":"Lovely! Which kind of one-off are we doing?";
+    case"service":return A.type==="monthly"?"Love that. A chef on call every week 🙌🏾 How often should I come through?":"Lovely! Which one do you need?";
     case"when":return A.type==="monthly"?"When should we start, and which days work best for you?":"Great choice 😋 When should I come through?";
     case"guests":return A.type==="monthly"?"How many people am I cooking for at home?":"How many people am I feeding?";
     case"area":return`Where in ${esc(C.business.city||"Lagos")} is the kitchen? This helps me work out logistics.`;
@@ -460,7 +463,7 @@ function ask(k){
 function answer(k){
   const s=svc();
   switch(k){
-    case"type":return A.type==="monthly"?"A chef every week":"A one-off day or night";
+    case"type":return A.type==="monthly"?"A chef every week":"Just once";
     case"service":return`${s.name} · ${s.from?"from ":""}${fmt(s.price)}${A.type==="monthly"?"/month":""}`;
     case"when":return A.type==="monthly"?`Starting ${pd(A.date)} · ${A.days.join(", ")}`:`${pd(A.date)} at ${pt(A.time)}`;
     case"guests":return`${A.guests} ${A.guests===1?"person":"people"}`;
@@ -511,7 +514,7 @@ function dock(k){
   if(k==="type"){
     d.innerHTML=`<div class="opts">
       <button class="opt" data-v="monthly"><span class="t">A chef every week ⭐</span><span class="d">Monthly plan: home-cooked meals all month</span><span class="p"><small>from </small>${fmt(minPrice(MONTHLY))}<small>/month</small></span></button>
-      <button class="opt" data-v="oneoff"><span class="t">One special day or night</span><span class="d">Dinners, occasions, a day of cooking</span><span class="p"><small>from </small>${fmt(minPrice(ONEOFF))}</span></button></div>`;
+      <button class="opt" data-v="oneoff"><span class="t">Just once</span><span class="d">A single booking. You'll pick which one next:</span><span class="mini">${ONEOFF.map(s=>`<span><span>${esc(s.name)}</span><b>${s.from?"from ":""}${fmt(s.price)}</b></span>`).join("")}</span></button></div>`;
     d.onclick=e=>{const b=e.target.closest("[data-v]");if(!b)return;if(A.type!==b.dataset.v){A.service=null;A.days=[];}A.type=b.dataset.v;next();};
   }
   else if(k==="service"){
