@@ -1,0 +1,11 @@
+{
+  "name": "chefyos",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev public --kv CHEF_KV --binding ADMIN_PASSWORD=test1234 --port 8788"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

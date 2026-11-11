@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Chef Yos Dashboard</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: the site's off-white kitchen counter, turned into a phone-first back office with a bottom tab bar and one Publish button. */
+:root{
+  --paper:#faf6ee; --white:#ffffff; --ink:#1c1915; --soft:#6b6459; --line:#e7dfcf;
+  --red:#d8382a; --gold:#e9b23a; --wa:#25d366;
+  --ok:#1f8a4c; --okbg:#e5f5ea; --warnbg:#fff4d6; --redbg:#fff1ec;
+  --display:"Caprasimo","Cooper Black",Georgia,serif;
+  --body:"Figtree","Avenir Next",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+button,input,textarea,select{font:inherit;color:inherit}
+img{display:block;max-width:100%}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px;border-radius:8px}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.05;text-wrap:balance}
+.wrap{width:min(860px,100% - 32px);margin-inline:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--ink);border-radius:14px;padding:11px 18px;font-weight:700;cursor:pointer;background:var(--white);box-shadow:3px 3px 0 var(--ink);text-decoration:none;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-red{background:var(--red);color:#fff}
+.btn-gold{background:var(--gold)}
+.btn-sm{padding:6px 12px;font-size:14px;border-radius:10px;box-shadow:2px 2px 0 var(--ink)}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:2px solid var(--line);background:var(--white);cursor:pointer;display:grid;place-items:center;font-size:16px;font-weight:700;flex:none}
+.icon-btn:hover{border-color:var(--ink)}
+.icon-btn.del:hover{border-color:var(--red);color:var(--red)}
+.icon-btn:disabled{opacity:.35;cursor:default}
+
+/* Login */
+.login{min-height:100%;display:grid;place-items:center;padding:24px}
+.login-card{width:min(400px,100%);background:var(--white);border:2px solid var(--ink);border-radius:28px;box-shadow:8px 8px 0 var(--red);padding:28px;display:grid;gap:16px;text-align:center}
+.login-card .av{width:84px;height:84px;border-radius:50%;border:3px solid var(--ink);overflow:hidden;margin:0 auto}
+.login-card .av img{width:100%;height:100%;object-fit:cover;object-position:50% 14%}
+.login-card h1{font-size:34px}
+.login-card p{color:var(--soft)}
+.err{color:var(--red);font-weight:600;font-size:14px}
+.field{display:grid;gap:5px;text-align:left}
+.field label,.lbl{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.field input,.field textarea,.field select{background:var(--white);border:2px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;transition:border-color .15s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--ink);outline:none}
+.field textarea{resize:vertical;min-height:90px}
+.field .help{font-size:13px;color:var(--soft)}
+.money{position:relative}
+.money input{padding-left:28px;font-variant-numeric:tabular-nums}
+.money::before{content:"₦";position:absolute;left:12px;top:50%;translate:0 -50%;color:var(--soft);font-weight:700}
+.linkish{background:none;border:0;color:var(--soft);text-decoration:underline;cursor:pointer;font-weight:600}
+
+/* App shell */
+.top{position:sticky;top:0;z-index:20;background:rgba(250,246,238,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:64px}
+.top .av{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);overflow:hidden;flex:none}
+.top .av img{width:100%;height:100%;object-fit:cover;object-position:50% 14%}
+.top b{font-family:var(--display);font-weight:400;font-size:22px;line-height:1}
+.top small{display:block;color:var(--soft);font-size:12px}
+.top .sp{flex:1}
+.top a,.top button{font-size:14px}
+.preview-band{background:var(--warnbg);border-bottom:2px solid var(--gold);font-size:14px;padding:8px 0;font-weight:600}
+main{padding:22px 0 150px}
+.tabs-desk{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.tab{border:2px solid var(--ink);background:var(--white);border-radius:999px;padding:8px 16px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.tab[aria-selected="true"]{background:var(--ink);color:#fff}
+.badge{background:var(--red);color:#fff;border-radius:999px;font-size:12px;padding:1px 7px;font-weight:800}
+.bottom-nav{display:none}
+@media (max-width:700px){
+  .tabs-desk{display:none}
+  .bottom-nav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--white);border-top:2px solid var(--ink);padding-bottom:env(safe-area-inset-bottom)}
+  .bottom-nav button{border:0;background:none;padding:9px 4px 10px;display:grid;justify-items:center;gap:2px;font-size:12px;font-weight:700;color:var(--soft);cursor:pointer;position:relative}
+  .bottom-nav button span.i{font-size:20px;line-height:1}
+  .bottom-nav button[aria-selected="true"]{color:var(--red)}
+  .bottom-nav .badge{position:absolute;top:4px;left:calc(50% + 6px)}
+}
+.page-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.page-h h1{font-size:clamp(30px,6vw,40px)}
+.page-h p{color:var(--soft);font-size:15px;max-width:52ch}
+.card{background:var(--white);border:2px solid var(--ink);border-radius:20px;padding:18px;box-shadow:4px 4px 0 var(--ink)}
+.stack{display:grid;gap:14px}
+.sec{margin-top:26px}
+.sec h2{font-size:24px;margin-bottom:4px}
+.sec > p{color:var(--soft);font-size:14px;margin-bottom:12px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--white);border:2px solid var(--ink);border-radius:16px;padding:12px 14px}
+.stat b{font-family:var(--display);font-weight:400;font-size:30px;display:block;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--soft);font-weight:600}
+.stat.hot{background:var(--redbg);border-color:var(--red)}
+.stat.hot b{color:var(--red)}
+
+/* Bookings */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{border:2px solid var(--line);background:var(--white);border-radius:999px;padding:5px 12px;font-weight:700;font-size:14px;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.bk{background:var(--white);border:2px solid var(--ink);border-radius:18px;padding:16px;display:grid;gap:10px;position:relative;overflow:hidden}
+.bk::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--line)}
+.bk[data-s="new"]::before{background:var(--red)}
+.bk[data-s="confirmed"]::before{background:var(--gold)}
+.bk[data-s="done"]::before{background:var(--ok)}
+.bk-h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding-left:4px}
+.bk-h h3{font-family:var(--body);font-weight:800;font-size:18px}
+.bk-h small{color:var(--soft);font-size:13px}
+.pill{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.pill.new{background:var(--redbg);color:var(--red)}
+.pill.confirmed{background:var(--warnbg);color:#8a5a00}
+.pill.done{background:var(--okbg);color:var(--ok)}
+.pill.cancelled{background:#eee;color:#666}
+.bk dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:15px;padding-left:4px}
+.bk dt{color:var(--soft);font-weight:600}
+.bk dd{overflow-wrap:anywhere}
+.bk .est{font-family:var(--display);font-size:20px;color:var(--red)}
+.bk-a{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-left:4px}
+.empty{text-align:center;padding:36px 16px;color:var(--soft);border:2px dashed var(--line);border-radius:20px}
+.empty b{display:block;font-family:var(--display);font-weight:400;font-size:24px;color:var(--ink);margin-bottom:6px}
+
+/* Price rows */
+.rowcard{background:var(--white);border:2px solid var(--ink);border-radius:16px;padding:14px;display:grid;gap:10px}
+.rowcard .grid{display:grid;grid-template-columns:1fr 160px;gap:10px}
+.rowcard .grid3{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rowcard .tools{display:flex;gap:6px;justify-content:flex-end;align-items:center}
+.rowcard .tools .sp{flex:1}
+.check{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--red)}
+@media (max-width:520px){.rowcard .grid,.rowcard .grid3{grid-template-columns:1fr}}
+
+/* Photos */
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.ph{background:var(--white);border:2px solid var(--ink);border-radius:16px;overflow:hidden;display:grid}
+.ph .im{aspect-ratio:1;background:#eee;position:relative}
+.ph .im img{width:100%;height:100%;object-fit:cover}
+.ph .im .n{position:absolute;top:8px;left:8px;background:var(--white);border:2px solid var(--ink);border-radius:999px;font-size:12px;font-weight:800;padding:1px 8px}
+.ph .bd{padding:10px;display:grid;gap:8px}
+.ph textarea{border:2px solid var(--line);border-radius:10px;padding:7px 9px;font-size:14px;resize:none;min-height:56px;width:100%}
+.ph textarea:focus{border-color:var(--ink);outline:none}
+.ph .tools{display:flex;gap:6px;justify-content:space-between}
+.drop{border:2px dashed var(--ink);border-radius:18px;padding:22px;text-align:center;background:var(--white);display:grid;gap:8px;justify-items:center;cursor:pointer;margin-bottom:16px}
+.drop.over{background:var(--warnbg)}
+.drop b{font-family:var(--display);font-weight:400;font-size:22px}
+.drop span{color:var(--soft);font-size:14px}
+.uploading{opacity:.55}
+
+/* Toggle */
+.switch{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.switch input{appearance:none;width:56px;height:32px;border-radius:999px;background:#d9d1c1;border:2px solid var(--ink);position:relative;cursor:pointer;flex:none;transition:background .2s}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:var(--white);border:2px solid var(--ink);transition:transform .2s}
+.switch input:checked{background:var(--ok)}
+.switch input:checked::after{transform:translateX(24px)}
+.switch b{font-size:17px}
+.switch small{display:block;color:var(--soft);font-size:14px;font-weight:400}
+
+/* Save bar */
+.savebar{position:fixed;left:50%;bottom:20px;translate:-50% 0;z-index:40;width:min(560px,100% - 24px);background:var(--ink);color:#fff;border-radius:18px;padding:10px 10px 10px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.3,1.4,.5,1),opacity .2s}
+.savebar.off{transform:translateY(160%);opacity:0;pointer-events:none}
+.savebar span{flex:1;font-weight:600;font-size:15px}
+.savebar .btn{box-shadow:none;border-color:#fff}
+.savebar .ghost{background:transparent;color:#fff;border:0;text-decoration:underline;cursor:pointer;font-weight:600;font-size:14px}
+@media (max-width:700px){.savebar{bottom:calc(74px + env(safe-area-inset-bottom))}}
+.toast{position:fixed;left:50%;top:18px;translate:-50% calc(-100% - 40px);background:var(--gold);color:var(--ink);font-weight:700;border:2px solid var(--ink);padding:10px 16px;border-radius:14px;z-index:60;transition:translate .3s cubic-bezier(.3,1.4,.5,1);box-shadow:3px 3px 0 var(--ink);max-width:calc(100% - 24px)}
+.toast.on{translate:-50% 0}
+.toast.bad{background:var(--red);color:#fff}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="login" id="loginView">
+  <form class="login-card" id="loginForm">
+    <div class="av"><img src="../img/chef.jpg" alt=""></div>
+    <h1>Welcome back, Yos</h1>
+    <p>Log in to update your prices, photos and bookings.</p>
+    <div class="field"><label for="pw">Password</label><input type="password" id="pw" autocomplete="current-password" required></div>
+    <p class="err" id="loginErr" role="alert"></p>
+    <button class="btn btn-red" type="submit" id="loginBtn">Log in</button>
+    <div id="previewOffer" hidden>
+      <p style="font-size:14px">This copy isn't connected to the live site yet.</p>
+      <button type="button" class="linkish" id="previewBtn">Look around in preview mode</button>
+    </div>
+  </form>
+</div>
+
+<!-- App -->
+<div id="appView" hidden>
+  <div class="preview-band" id="previewBand" hidden><div class="wrap">Preview mode: you can try everything, but nothing is saved to the live site.</div></div>
+  <header class="top">
+    <div class="wrap">
+      <span class="av"><img src="../img/chef.jpg" alt=""></span>
+      <div><b>Chef Yos</b><small>Dashboard</small></div>
+      <span class="sp"></span>
+      <a class="btn btn-sm" href="../" target="_blank" rel="noopener">View site</a>
+      <button class="linkish" id="logout" type="button">Log out</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="tabs-desk" role="tablist" id="tabsDesk"></div>
+
+    <!-- Bookings -->
+    <section data-view="bookings">
+      <div class="page-h"><div><h1>Bookings</h1><p>Every booking a customer sent you from the website. Their message, with their number, is in your WhatsApp.</p></div>
+        <button class="btn btn-sm" id="refresh" type="button">Refresh</button></div>
+      <div class="stats" id="stats"></div>
+      <div class="filters" id="filters"></div>
+      <div class="stack" id="bkList"></div>
+    </section>
+
+    <!-- Prices -->
+    <section data-view="prices" hidden>
+      <div class="page-h"><div><h1>Menu &amp; prices</h1><p>Change what you offer and what it costs. Tap Publish when you're done and the website updates.</p></div></div>
+      <div class="sec"><h2>Monthly private chef</h2><p>Weekly plans, billed per month.</p><div class="stack" id="monthlyList"></div>
+        <button class="btn btn-sm" style="margin-top:12px" data-add="monthly" type="button">+ Add a monthly plan</button></div>
+      <div class="sec"><h2>One-off private chef</h2><p>Single days, dinners and occasions.</p><div class="stack" id="oneoffList"></div>
+        <button class="btn btn-sm" style="margin-top:12px" data-add="oneoff" type="button">+ Add a one-off service</button></div>
+      <div class="sec"><h2>Add-ons</h2><p>Extras customers can add in the booking chat.</p><div class="stack" id="addonList"></div>
+        <button class="btn btn-sm" style="margin-top:12px" data-add="addons" type="button">+ Add an add-on</button></div>
+    </section>
+
+    <!-- Photos -->
+    <section data-view="photos" hidden>
+      <div class="page-h"><div><h1>Photos</h1><p>The food gallery on your website. The first photos show at the top.</p></div></div>
+      <label class="drop" id="drop" for="fileIn">
+        <b>+ Add photos</b>
+        <span>Tap to choose from your phone, or drop photos here. They're resized automatically.</span>
+      </label>
+      <input type="file" id="fileIn" accept="image/*" multiple hidden>
+      <div class="photos" id="photoList"></div>
+    </section>
+
+    <!-- Settings -->
+    <section data-view="settings" hidden>
+      <div class="page-h"><div><h1>Settings</h1><p>Your contact details and the words on your website.</p></div></div>
+      <div class="stack">
+        <div class="card stack">
+          <label class="switch"><span><b>Taking bookings</b><small id="openHint"></small></span><input type="checkbox" id="sOpen"></label>
+          <div class="field" id="closedWrap"><label for="sClosed">Message when you're not taking bookings</label><textarea id="sClosed"></textarea></div>
+        </div>
+        <div class="card stack">
+          <div class="field"><label for="sWa">WhatsApp number</label><input id="sWa" inputmode="numeric" placeholder="2348083519434"><span class="help">Country code first, no + or spaces. Example: 2348083519434</span></div>
+          <div class="field"><label for="sPhone">Phone number as shown on the site</label><input id="sPhone" placeholder="0808 351 9434"></div>
+          <div class="field"><label for="sCity">City</label><input id="sCity" placeholder="Lagos"></div>
+        </div>
+        <div class="card stack">
+          <div class="field"><label for="sHero">Intro at the top of the site</label><textarea id="sHero"></textarea></div>
+          <div class="field"><label for="sAbout">"Meet the chef" paragraph</label><textarea id="sAbout"></textarea></div>
+        </div>
+        <div class="card stack">
+          <h2 style="font-size:22px">Your password</h2>
+          <p style="color:var(--soft);font-size:15px">Your password is kept in Cloudflare: Workers &amp; Pages › chefyos › Settings › Variables and Secrets › <code>ADMIN_PASSWORD</code>. Change it there, then redeploy the site. Changing it logs out every device.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" id="tabsMob" aria-label="Dashboard sections"></nav>
+
+  <div class="savebar off" id="savebar" role="region" aria-label="Unsaved changes">
+    <span id="saveMsg">You have unsaved changes</span>
+    <button class="ghost" id="discard" type="button">Undo</button>
+    <button class="btn btn-gold" id="publish" type="button">Publish</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../assets/defaults.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=window.CHEF_FMT;
+const TOKEN_KEY="chefyos-admin-token";
+let token=null, preview=false, C=null, saved="", bookings=[], filter="new", view="bookings";
+const imgSrc=s=>/^img\//.test(s)?"../"+s:s;
+const uid=p=>p+"-"+Math.random().toString(36).slice(2,8);
+const clone=o=>JSON.parse(JSON.stringify(o));
+
+/* ---------- API ---------- */
+async function api(path,opts={}){
+  const headers=Object.assign({},opts.headers||{});
+  if(token)headers.authorization="Bearer "+token;
+  const r=await fetch(path,Object.assign({},opts,{headers,cache:"no-store"}));
+  let data={};try{data=await r.json();}catch(_){}
+  if(r.status===401&&path!=="/api/login"){logout("Your session ended. Please log in again.");throw new Error("auth");}
+  if(!r.ok)throw new Error(data.error||"Something went wrong. Please try again.");
+  return data;
+}
+async function apiAvailable(){
+  if(location.protocol==="file:")return false;
+  try{const r=await fetch("/api/content",{cache:"no-store"});return r.ok&&(r.headers.get("content-type")||"").includes("json");}catch(_){return false;}
+}
+
+/* ---------- Login ---------- */
+$("loginForm").onsubmit=async e=>{
+  e.preventDefault();$("loginErr").textContent="";$("loginBtn").disabled=true;
+  try{const d=await api("/api/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({password:$("pw").value})});
+    token=d.token;try{localStorage.setItem(TOKEN_KEY,token);}catch(_){}
+    $("pw").value="";await start();
+  }catch(err){$("loginErr").textContent=err.message==="Failed to fetch"?"Can't reach the site. Check your internet connection.":err.message;}
+  $("loginBtn").disabled=false;
+};
+$("previewBtn").onclick=()=>{preview=true;start();};
+function logout(msg){
+  token=null;try{localStorage.removeItem(TOKEN_KEY);}catch(_){}
+  $("appView").hidden=true;$("loginView").hidden=false;$("loginErr").textContent=msg||"";
+}
+$("logout").onclick=()=>{if(dirty()&&!confirmLeave())return;logout();};
+function confirmLeave(){return window.confirm?(()=>{try{return confirm("You have unpublished changes. Leave anyway?");}catch(_){return true;}})():true;}
+
+async function start(){
+  $("loginView").hidden=true;$("appView").hidden=false;$("previewBand").hidden=!preview;
+  if(preview){
+    C=window.CHEF_MERGE(null);
+    bookings=sampleBookings();
+  }else{
+    const [c,b]=await Promise.all([api("/api/content"),api("/api/bookings").catch(()=>({bookings:[]}))]);
+    C=window.CHEF_MERGE(c.content);bookings=b.bookings||[];
+  }
+  delete C.updatedAt;
+  saved=JSON.stringify(C);
+  buildTabs();renderAll();
+  if(!bookings.some(b=>b.status==="new"))filter="all";
+  renderBookings();
+}
+
+/* ---------- Tabs ---------- */
+const TABS=[["bookings","Bookings","📥"],["prices","Prices","🍽️"],["photos","Photos","📸"],["settings","Settings","⚙️"]];
+function buildTabs(){
+  const n=bookings.filter(b=>b.status==="new").length, badge=n?`<span class="badge">${n}</span>`:"";
+  $("tabsDesk").innerHTML=TABS.map(([k,l])=>`<button class="tab" role="tab" data-tab="${k}" aria-selected="${view===k}">${l}${k==="bookings"?badge:""}</button>`).join("");
+  $("tabsMob").innerHTML=TABS.map(([k,l,i])=>`<button data-tab="${k}" aria-selected="${view===k}"><span class="i">${i}</span>${l}${k==="bookings"?badge:""}</button>`).join("");
+}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-tab]");if(!t)return;view=t.dataset.tab;
+  document.querySelectorAll("[data-view]").forEach(s=>s.hidden=s.dataset.view!==view);buildTabs();scrollTo(0,0);});
+
+/* ---------- Bookings ---------- */
+function sampleBookings(){
+  const d=n=>{const x=new Date();x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);};
+  const now=Date.now();
+  return [
+    {id:"s1",status:"new",createdAt:new Date(now-36e5).toISOString(),name:"Example: Adaeze O.",type:"oneoff",service:"Private dinner / intimate dining",date:d(6),time:"19:30",guests:4,area:"Lekki",addons:"Grocery shopping",notes:"Anniversary dinner. No pork please.",estimate:"₦115,000 – ₦125,000"},
+    {id:"s2",status:"confirmed",createdAt:new Date(now-864e5*2).toISOString(),name:"Example: Tunde B.",type:"monthly",service:"Twice a week",date:d(10),days:"Tue, Fri",guests:3,area:"Ikoyi",addons:"",notes:"",estimate:"₦200,000"},
+    {id:"s3",status:"done",createdAt:new Date(now-864e5*9).toISOString(),name:"Example: Funmi A.",type:"oneoff",service:"Special occasion",date:d(-3),time:"18:00",guests:12,area:"Victoria Island",addons:"Event / private dining setup",notes:"40th birthday",estimate:"from ₦200,000"}
+  ];
+}
+const STATUS=[["new","New"],["confirmed","Confirmed"],["done","Done"],["cancelled","Cancelled"]];
+function pd(v){if(!v)return"";const x=new Date(v+"T12:00:00");return isNaN(x)?v:x.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});}
+function pt(v){if(!v)return"";const[h,m]=v.split(":").map(Number);return`${(h%12)||12}:${String(m).padStart(2,"0")}${h<12?"am":"pm"}`;}
+function ago(iso){const s=(Date.now()-new Date(iso))/1000;if(s<60)return"just now";if(s<3600)return Math.floor(s/60)+" min ago";if(s<86400)return Math.floor(s/3600)+"h ago";const d=Math.floor(s/86400);return d<30?d+(d>1?" days":" day")+" ago":new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short"});}
+function renderBookings(){
+  const mStart=new Date();mStart.setDate(1);mStart.setHours(0,0,0,0);
+  const today=new Date().toISOString().slice(0,10);
+  const nNew=bookings.filter(b=>b.status==="new").length;
+  const nMonth=bookings.filter(b=>new Date(b.createdAt)>=mStart).length;
+  const nUp=bookings.filter(b=>b.status==="confirmed"&&(b.date||"")>=today).length;
+  $("stats").innerHTML=`<div class="stat ${nNew?"hot":""}"><b>${nNew}</b><span>New</span></div><div class="stat"><b>${nUp}</b><span>Upcoming</span></div><div class="stat"><b>${nMonth}</b><span>This month</span></div>`;
+  $("filters").innerHTML=[["new","New"],["confirmed","Confirmed"],["done","Done"],["cancelled","Cancelled"],["all","All"]].map(([k,l])=>`<button type="button" class="chip" data-f="${k}" aria-pressed="${filter===k}">${l}</button>`).join("");
+  const list=bookings.filter(b=>filter==="all"||b.status===filter);
+  $("bkList").innerHTML=list.length?list.map(b=>`<article class="bk" data-s="${esc(b.status)}">
+    <div class="bk-h"><div><h3>${esc(b.name)}</h3><small>Sent ${ago(b.createdAt)}</small></div><span class="pill ${esc(b.status)}">${esc(b.status)}</span></div>
+    <dl>
+      <dt>Service</dt><dd>${esc(b.service)}${b.type==="monthly"?" (monthly)":""}</dd>
+      ${b.date?`<dt>${b.type==="monthly"?"Starts":"When"}</dt><dd>${esc(pd(b.date))}${b.time?", "+esc(pt(b.time)):""}</dd>`:""}
+      ${b.days?`<dt>Days</dt><dd>${esc(b.days)}</dd>`:""}
+      ${b.guests?`<dt>${b.type==="monthly"?"Household":"Guests"}</dt><dd>${esc(b.guests)}</dd>`:""}
+      ${b.area?`<dt>Area</dt><dd>${esc(b.area)}</dd>`:""}
+      ${b.addons?`<dt>Extras</dt><dd>${esc(b.addons)}</dd>`:""}
+      ${b.notes?`<dt>Notes</dt><dd>${esc(b.notes)}</dd>`:""}
+      ${b.estimate?`<dt>Estimate</dt><dd class="est">${esc(b.estimate)}</dd>`:""}
+    </dl>
+    <div class="bk-a">
+      ${b.status==="new"?`<button class="btn btn-sm btn-gold" data-st="confirmed" data-id="${esc(b.id)}" type="button">Mark confirmed</button>`:""}
+      ${b.status==="confirmed"?`<button class="btn btn-sm" style="background:var(--okbg)" data-st="done" data-id="${esc(b.id)}" type="button">Mark done</button>`:""}
+      <select aria-label="Change status" data-sel="${esc(b.id)}" class="chip" style="padding:6px 10px">${STATUS.map(([k,l])=>`<option value="${k}" ${b.status===k?"selected":""}>${l}</option>`).join("")}</select>
+      <span style="flex:1"></span>
+      <button class="icon-btn del" data-delb="${esc(b.id)}" type="button" aria-label="Delete booking" title="Delete">🗑</button>
+    </div></article>`).join("")
+    :`<div class="empty"><b>${filter==="new"?"You're all caught up":"Nothing here yet"}</b>${bookings.length?"Try another filter.":"When a customer sends a booking from your website, it shows up here."}</div>`;
+  buildTabs();
+}
+$("filters").onclick=e=>{const f=e.target.closest("[data-f]");if(f){filter=f.dataset.f;renderBookings();}};
+async function setStatus(id,status){
+  const b=bookings.find(x=>x.id===id);if(!b)return;const old=b.status;b.status=status;renderBookings();
+  if(preview)return toast("Updated (preview)");
+  try{await api("/api/bookings",{method:"PATCH",headers:{"content-type":"application/json"},body:JSON.stringify({id,status})});toast("Booking updated");}
+  catch(err){b.status=old;renderBookings();if(err.message!=="auth")toast(err.message,true);}
+}
+$("bkList").addEventListener("click",async e=>{
+  const s=e.target.closest("[data-st]");if(s)return setStatus(s.dataset.id,s.dataset.st);
+  const d=e.target.closest("[data-delb]");
+  if(d){
+    if(d.dataset.armed!=="1"){d.dataset.armed="1";d.textContent="Sure?";d.style.width="auto";d.style.padding="0 10px";setTimeout(()=>{if(d.isConnected){d.dataset.armed="";d.textContent="🗑";d.style.width="";d.style.padding="";}},3000);return;}
+    const id=d.dataset.delb;
+    if(!preview){try{await api("/api/bookings?id="+encodeURIComponent(id),{method:"DELETE"});}catch(err){if(err.message!=="auth")toast(err.message,true);return;}}
+    bookings=bookings.filter(b=>b.id!==id);renderBookings();toast("Booking deleted");
+  }
+});
+$("bkList").addEventListener("change",e=>{const s=e.target.closest("[data-sel]");if(s)setStatus(s.dataset.sel,s.value);});
+$("refresh").onclick=async()=>{if(preview)return toast("Preview mode has sample bookings only");
+  try{bookings=(await api("/api/bookings")).bookings||[];renderBookings();toast("Up to date");}catch(err){if(err.message!=="auth")toast(err.message,true);}};
+
+/* ---------- Prices ---------- */
+const moveBtns=(list,i,len)=>`<button class="icon-btn" type="button" data-mv="${list}:${i}:-1" ${i===0?"disabled":""} aria-label="Move up">↑</button><button class="icon-btn" type="button" data-mv="${list}:${i}:1" ${i===len-1?"disabled":""} aria-label="Move down">↓</button>`;
+const delBtn=(list,i)=>`<button class="icon-btn del" type="button" data-del="${list}:${i}" aria-label="Remove">✕</button>`;
+function renderPrices(){
+  $("oneoffList").innerHTML=C.oneoff.map((s,i)=>`<div class="rowcard">
+    <div class="grid"><div class="field"><label for="o-n-${i}">Service name</label><input id="o-n-${i}" data-b="oneoff:${i}:name" value="${esc(s.name)}"></div>
+    <div class="field"><label for="o-p-${i}">Price</label><div class="money"><input id="o-p-${i}" type="number" min="0" step="1000" inputmode="numeric" data-b="oneoff:${i}:price" value="${esc(s.price)}"></div></div></div>
+    <div class="field"><label for="o-d-${i}">Short description</label><input id="o-d-${i}" data-b="oneoff:${i}:note" value="${esc(s.note||"")}" placeholder="Shown in the booking chat"></div>
+    <div class="tools"><label class="check"><input type="checkbox" data-b="oneoff:${i}:from" ${s.from?"checked":""}> Show as "from" price</label><span class="sp"></span>${moveBtns("oneoff",i,C.oneoff.length)}${delBtn("oneoff",i)}</div></div>`).join("");
+  $("monthlyList").innerHTML=C.monthly.map((s,i)=>`<div class="rowcard">
+    <div class="grid"><div class="field"><label for="m-n-${i}">Plan name</label><input id="m-n-${i}" data-b="monthly:${i}:name" value="${esc(s.name)}"></div>
+    <div class="field"><label for="m-p-${i}">Price per month</label><div class="money"><input id="m-p-${i}" type="number" min="0" step="1000" inputmode="numeric" data-b="monthly:${i}:price" value="${esc(s.price)}"></div></div></div>
+    <div class="tools"><div class="field" style="width:170px"><label for="m-w-${i}">Visits per week</label><input id="m-w-${i}" type="number" min="1" max="7" data-b="monthly:${i}:per" value="${esc(s.per)}"></div><span class="sp"></span>${moveBtns("monthly",i,C.monthly.length)}${delBtn("monthly",i)}</div></div>`).join("");
+  const KINDS=[["fixed","Fixed price"],["from","From a price"],["range","Price range"],["hourly","Per hour"],["quote","Priced on request"]];
+  $("addonList").innerHTML=C.addons.map((a,i)=>`<div class="rowcard">
+    <div class="grid"><div class="field"><label for="a-n-${i}">Add-on name</label><input id="a-n-${i}" data-b="addons:${i}:name" value="${esc(a.name)}"></div>
+    <div class="field"><label for="a-k-${i}">How it's priced</label><select id="a-k-${i}" data-b="addons:${i}:kind">${KINDS.map(([k,l])=>`<option value="${k}" ${a.kind===k?"selected":""}>${l}</option>`).join("")}</select></div></div>
+    <div class="grid3">${a.kind==="quote"
+      ?`<div class="field"><label for="a-q-${i}">Text shown instead of a price</label><input id="a-q-${i}" data-b="addons:${i}:quoteText" value="${esc(a.quoteText||"")}" placeholder="based on location"></div>`
+      :`<div class="field"><label for="a-p-${i}">${a.kind==="range"?"Lowest price":a.kind==="hourly"?"Price per hour":"Price"}</label><div class="money"><input id="a-p-${i}" type="number" min="0" step="1000" inputmode="numeric" data-b="addons:${i}:price" value="${esc(a.price)}"></div></div>
+        ${a.kind==="range"?`<div class="field"><label for="a-x-${i}">Highest price</label><div class="money"><input id="a-x-${i}" type="number" min="0" step="1000" inputmode="numeric" data-b="addons:${i}:priceMax" value="${esc(a.priceMax||"")}"></div></div>`:""}`}</div>
+    <div class="tools"><span class="lbl">Shows as: ${esc(window.CHEF_ADDON_LABEL(a))}</span><span class="sp"></span>${moveBtns("addons",i,C.addons.length)}${delBtn("addons",i)}</div></div>`).join("")||`<div class="empty">No add-ons. Customers will skip that step.</div>`;
+}
+$("appView").addEventListener("input",e=>{
+  const el=e.target.closest("[data-b]");if(!el)return;
+  const [list,i,key]=el.dataset.b.split(":");const item=C[list][+i];
+  if(el.type==="checkbox")item[key]=el.checked;
+  else if(el.type==="number")item[key]=el.value===""?"":Number(el.value);
+  else item[key]=el.value;
+  if(key==="kind"){if(item.kind==="range"&&!item.priceMax)item.priceMax=item.price;renderPrices();}
+  else if(list==="addons"){const t=el.closest(".rowcard").querySelector(".tools .lbl");if(t)t.textContent="Shows as: "+window.CHEF_ADDON_LABEL(item);}
+  changed();
+});
+$("appView").addEventListener("click",e=>{
+  const mv=e.target.closest("[data-mv]");
+  if(mv){const[l,i,d]=mv.dataset.mv.split(":");const a=C[l],x=+i,y=x+(+d);if(y<0||y>=a.length)return;[a[x],a[y]]=[a[y],a[x]];rerender(l);changed();return;}
+  const del=e.target.closest("[data-del]");
+  if(del){
+    if(del.dataset.armed!=="1"){del.dataset.armed="1";del.textContent="Sure?";del.style.width="auto";del.style.padding="0 10px";setTimeout(()=>{if(del.isConnected){del.dataset.armed="";del.textContent="✕";del.style.width="";del.style.padding="";}},3000);return;}
+    const[l,i]=del.dataset.del.split(":");
+    if((l==="oneoff"||l==="monthly")&&C[l].length<=1)return toast("Keep at least one option here",true);
+    C[l].splice(+i,1);rerender(l);changed();return;
+  }
+  const add=e.target.closest("[data-add]");
+  if(add){const l=add.dataset.add;
+    if(l==="oneoff")C.oneoff.push({id:uid("s"),name:"New service",price:0,from:false,note:""});
+    if(l==="monthly")C.monthly.push({id:uid("m"),name:"New plan",price:0,per:1});
+    if(l==="addons")C.addons.push({id:uid("a"),name:"New add-on",kind:"fixed",price:0});
+    renderPrices();changed();
+    const ins=document.querySelectorAll(`#${l==="addons"?"addonList":l+"List"} .rowcard input`);
+    const target=[...ins].filter(x=>x.dataset.b&&x.dataset.b.endsWith(":name")).pop();target?.focus();target?.select();
+  }
+});
+function rerender(l){l==="gallery"?renderPhotos():renderPrices();}
+
+/* ---------- Photos ---------- */
+function renderPhotos(){
+  const n=C.gallery.length;
+  $("photoList").innerHTML=C.gallery.map((p,i)=>`<div class="ph ${p.uploading?"uploading":""}">
+    <div class="im"><img src="${esc(imgSrc(p.src))}" alt="${esc(p.caption)}" loading="lazy"><span class="n">${i+1}</span></div>
+    <div class="bd"><textarea aria-label="Caption for photo ${i+1}" data-b="gallery:${i}:caption" placeholder="Name of the dish">${esc(p.caption)}</textarea>
+    <div class="tools"><span style="display:flex;gap:6px">${moveBtns("gallery",i,n)}</span>${delBtn("gallery",i)}</div></div></div>`).join("")||`<div class="empty" style="grid-column:1/-1"><b>No photos yet</b>Add some of your best plates.</div>`;
+}
+function resize(file,max=1400){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file),im=new Image();
+    im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+      c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);c.toBlob(b=>b?res(b):rej(new Error("Couldn't read that photo")),"image/jpeg",.82);};
+    im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error("Couldn't read that photo. Try a JPG or PNG."));};
+    im.src=url;
+  });
+}
+async function addFiles(files){
+  const list=[...files].filter(f=>f.type.startsWith("image/"));
+  if(!list.length)return;
+  for(const f of list){
+    const item={src:"",caption:f.name.replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").replace(/^IMG\s?\d*$/i,""),uploading:true};
+    try{
+      const blob=await resize(f);
+      item.src=URL.createObjectURL(blob);C.gallery.unshift(item);renderPhotos();
+      if(!preview){const r=await api("/api/upload",{method:"POST",headers:{"content-type":"image/jpeg"},body:blob});item.src=r.src;}
+      else{item.src=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(blob);});}
+      delete item.uploading;renderPhotos();changed();
+    }catch(err){C.gallery=C.gallery.filter(x=>x!==item);renderPhotos();if(err.message!=="auth")toast(err.message,true);}
+  }
+  toast(list.length>1?"Photos added. Add captions, then Publish":"Photo added. Add a caption, then Publish");
+}
+$("fileIn").onchange=e=>{addFiles(e.target.files);e.target.value="";};
+const drop=$("drop");
+["dragenter","dragover"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add("over");}));
+["dragleave","drop"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove("over");}));
+drop.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
+
+/* ---------- Settings ---------- */
+const SET=[["sWa","whatsapp"],["sPhone","phoneDisplay"],["sCity","city"],["sHero","heroIntro"],["sAbout","about"],["sClosed","closedMessage"]];
+function renderSettings(){
+  SET.forEach(([id,k])=>$(id).value=C.business[k]||"");
+  $("sOpen").checked=!!C.business.bookingsOpen;openHint();
+}
+function openHint(){const o=$("sOpen").checked;$("openHint").textContent=o?"Customers can book through the website chat.":"The booking chat is switched off and shows your message instead.";$("closedWrap").hidden=o;}
+SET.forEach(([id,k])=>$(id).addEventListener("input",e=>{C.business[k]=e.target.value;changed();}));
+$("sOpen").onchange=e=>{C.business.bookingsOpen=e.target.checked;openHint();changed();};
+
+/* ---------- Save ---------- */
+const clean=()=>{const c=clone(C);c.gallery=c.gallery.filter(p=>!p.uploading).map(({src,caption})=>({src,caption}));return c;};
+const dirty=()=>C&&JSON.stringify(clean())!==saved;
+function changed(){$("savebar").classList.toggle("off",!dirty());}
+function validate(c){
+  const bad=(l,i,msg)=>`${l} #${i+1}: ${msg}`;
+  for(const[i,s]of c.oneoff.entries()){if(!String(s.name).trim())return bad("One-off service",i,"add a name");if(!(s.price>=0)||s.price==="")return bad("One-off service",i,"add a price");}
+  for(const[i,s]of c.monthly.entries()){if(!String(s.name).trim())return bad("Monthly plan",i,"add a name");if(!(s.price>=0)||s.price==="")return bad("Monthly plan",i,"add a price");if(!(s.per>=1&&s.per<=7))return bad("Monthly plan",i,"visits per week must be 1 to 7");}
+  for(const[i,a]of c.addons.entries()){if(!String(a.name).trim())return bad("Add-on",i,"add a name");if(a.kind!=="quote"&&(a.price===""||!(a.price>=0)))return bad("Add-on",i,"add a price");if(a.kind==="range"&&!(a.priceMax>=a.price))return bad("Add-on",i,"highest price must be at least the lowest");}
+  const wa=String(c.business.whatsapp||"").replace(/\D/g,"");if(wa.length<10)return "Settings: check the WhatsApp number (country code first)";
+  c.business.whatsapp=wa;
+  return null;
+}
+$("publish").onclick=async()=>{
+  if(C.gallery.some(p=>p.uploading))return toast("Wait for photos to finish uploading",true);
+  const c=clean();const problem=validate(c);if(problem)return toast(problem,true);
+  $("publish").disabled=true;$("saveMsg").textContent="Publishing…";
+  try{
+    if(!preview)await api("/api/content",{method:"PUT",headers:{"content-type":"application/json"},body:JSON.stringify({content:c})});
+    C.business.whatsapp=c.business.whatsapp;saved=JSON.stringify(c);changed();
+    toast(preview?"Looks good. (Preview mode, so nothing was saved)":"Published! Your website is updated 🎉");
+  }catch(err){if(err.message!=="auth")toast(err.message,true);}
+  $("publish").disabled=false;$("saveMsg").textContent="You have unsaved changes";
+};
+$("discard").onclick=()=>{C=JSON.parse(saved);renderAll();changed();toast("Changes undone");};
+addEventListener("beforeunload",e=>{if(dirty()){e.preventDefault();e.returnValue="";}});
+
+function renderAll(){renderPrices();renderPhotos();renderSettings();}
+let tt;function toast(t,bad){const el=$("toast");el.textContent=t;el.classList.toggle("bad",!!bad);el.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("on"),bad?4200:2600);}
+
+/* ---------- Boot ---------- */
+(async()=>{
+  const live=await apiAvailable();
+  if(!live){$("previewOffer").hidden=false;$("pw").required=false;$("loginBtn").hidden=true;$("pw").closest(".field").hidden=true;
+    $("loginView").querySelector("p").textContent="This is a preview of your dashboard. Once the site is live on Cloudflare, you'll log in here with your password.";return;}
+  try{token=localStorage.getItem(TOKEN_KEY);}catch(_){}
+  if(token){try{await start();}catch(_){}}
+})();
+})();
+</script>
+</body>
+</html>

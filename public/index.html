@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chef Yos — Private Chef Lagos</title>
+<meta name="description" content="Chef Yos is a private chef in Lagos. Get your own chef every week on a monthly plan, or book a private dinner or special occasion, straight on WhatsApp.">
+<meta name="theme-color" content="#faf6ee">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/chef.jpg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chef Yos — Private Chef Lagos">
+<meta property="og:description" content="Your own private chef in Lagos, every week. Monthly plans and private dining, booked on WhatsApp.">
+<meta property="og:image" content="/img/share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a bright off-white kitchen counter. Chef Yos's red frames set the accent; her plates do the talking; booking is a chat. */
+:root{
+  --paper:#faf6ee;
+  --white:#ffffff;
+  --ink:#1c1915;
+  --soft:#6b6459;
+  --line:#e7dfcf;
+  --red:#d8382a;
+  --gold:#e9b23a;
+  --wa:#25d366;
+  --display:"Caprasimo", "Cooper Black", Georgia, serif;
+  --body:"Figtree", "Avenir Next", system-ui, sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;overflow-x:hidden}
+a{color:inherit}
+button,input,textarea{font:inherit;color:inherit}
+img{display:block;max-width:100%}
+svg{display:block;max-width:100%}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:8px}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1;text-wrap:balance}
+.wrap{width:min(1160px,100% - 36px);margin-inline:auto}
+.pill{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);cursor:pointer;text-decoration:none;font-weight:700;font-size:16px;padding:13px 22px;border-radius:16px;transition:transform .15s, box-shadow .15s;box-shadow:4px 4px 0 var(--ink)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn-red{background:var(--red);color:#fff}
+.btn-wa{background:var(--wa);color:#05301a}
+.btn-white{background:var(--white);color:var(--ink)}
+.btn svg{width:20px;height:20px;flex:none}
+
+/* Top bar */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(250,246,238,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;height:72px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo .hat{width:42px;height:42px;border-radius:13px;background:var(--red);color:#fff;display:grid;place-items:center;transform:rotate(-6deg);border:2px solid var(--ink)}
+.logo .hat svg{width:26px;height:26px}
+.logo b{font-family:var(--display);font-size:26px;font-weight:400}
+.top nav{display:flex;gap:24px;font-weight:600}
+.top nav a{text-decoration:none;color:var(--soft)}
+.top nav a:hover{color:var(--red)}
+.top .btn{padding:10px 16px;font-size:15px;box-shadow:3px 3px 0 var(--ink)}
+@media (max-width:820px){.top nav{display:none}}
+
+/* Hero */
+.hero{padding:50px 0 20px}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(54px,8.6vw,124px);letter-spacing:-.01em;line-height:.93;margin-top:16px}
+.hero h1 .r{color:var(--red);display:inline-block;transform:rotate(-3deg)}
+.hero p{max-width:48ch;font-size:19px;color:#3f3a33;margin-top:22px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.proof{display:flex;align-items:center;gap:14px;margin-top:30px}
+.proof .thumbs{display:flex;flex:none}
+.proof .thumbs img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:3px solid var(--paper);margin-left:-12px}
+.proof .thumbs img:first-child{margin-left:0}
+.proof span{font-size:14px;color:var(--soft);font-weight:600}
+.portrait{position:relative;justify-self:center;width:min(100%,420px)}
+.portrait .frame{border-radius:220px 220px 28px 28px;overflow:hidden;border:3px solid var(--ink);box-shadow:10px 10px 0 var(--red);aspect-ratio:4/5;background:#4a4846}
+.portrait .frame img{width:100%;height:100%;object-fit:cover;object-position:50% 12%}
+.portrait .hi{position:absolute;left:-26px;top:16%;background:var(--white);border:2px solid var(--ink);border-radius:18px 18px 18px 4px;padding:10px 16px;font-weight:700;box-shadow:4px 4px 0 var(--ink);transform:rotate(-5deg);animation:bob 4s ease-in-out infinite}
+.portrait .plate{position:absolute;right:-30px;bottom:9%;width:132px;height:132px;border-radius:50%;overflow:hidden;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);animation:bob 4s ease-in-out infinite .8s}
+.portrait .plate img{width:100%;height:100%;object-fit:cover}
+.portrait .price{position:absolute;left:-14px;bottom:-14px;background:var(--gold);border:2px solid var(--ink);border-radius:14px;padding:8px 14px;font-weight:700;box-shadow:4px 4px 0 var(--ink);transform:rotate(4deg)}
+.portrait .price b{font-family:var(--display);font-weight:400;font-size:24px}
+@keyframes bob{50%{translate:0 -8px}}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}.portrait{width:min(78%,360px);margin-top:10px}.portrait .hi{left:-14px}.portrait .plate{right:-16px;width:104px;height:104px}}
+
+.marquee{margin-top:60px;background:var(--red);color:#fff;transform:rotate(-1.4deg);overflow:hidden;border-block:3px solid var(--ink)}
+.marquee .track{display:flex;gap:34px;width:max-content;padding:13px 0;font-family:var(--display);font-size:26px;white-space:nowrap;animation:slide 32s linear infinite}
+.marquee .track span::after{content:"✦";margin-left:34px;color:var(--gold)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+section{padding:96px 0}
+.head{margin-bottom:34px}
+.head h2{font-size:clamp(42px,6vw,76px);margin-top:12px}
+.head h2 em{font-style:normal;color:var(--red)}
+.head p{max-width:54ch;color:#4a443c;margin-top:14px}
+.head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+
+/* Gallery */
+.gallery{columns:3 260px;column-gap:16px}
+.shot{break-inside:avoid;margin-bottom:16px;position:relative;border-radius:22px;overflow:hidden;border:2px solid var(--ink);cursor:zoom-in;background:var(--white);display:block;width:100%;padding:0;transition:transform .25s, box-shadow .25s}
+.shot:hover{transform:rotate(-1deg) translateY(-3px);box-shadow:6px 6px 0 var(--ink)}
+.shot img{width:100%;height:auto}
+.shot figcaption{position:absolute;left:10px;bottom:10px;max-width:calc(100% - 20px);line-height:1.3;background:var(--white);border:2px solid var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;text-align:left}
+.lb{position:fixed;inset:0;z-index:80;background:rgba(28,25,21,.88);display:grid;place-items:center;padding:20px}
+.lb img{max-height:84vh;width:auto;border-radius:18px;border:3px solid #fff}
+.lb p{color:#fff;font-weight:700;text-align:center;margin-top:12px}
+.lb .x{position:absolute;top:16px;right:16px;width:46px;height:46px;border-radius:50%;border:2px solid #fff;background:transparent;color:#fff;font-size:24px;cursor:pointer}
+.lb .nav{position:absolute;top:50%;translate:0 -50%;width:50px;height:50px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.3);color:#fff;font-size:22px;cursor:pointer}
+.lb .prev{left:14px}.lb .next{right:14px}
+
+/* Chat booking */
+#book{background:var(--white);border-block:1px solid var(--line)}
+.book-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:44px;align-items:start}
+@media (max-width:940px){.book-grid{grid-template-columns:1fr}}
+.side-list{display:grid;gap:14px;margin-top:26px}
+.side-list div{display:flex;gap:14px;align-items:flex-start}
+.side-list .n{width:34px;height:34px;flex:none;border-radius:50%;background:var(--gold);border:2px solid var(--ink);display:grid;place-items:center;font-weight:800}
+.side-list p{color:#4a443c;font-size:16px}
+.side-list strong{color:var(--ink)}
+.side-photo{margin-top:28px;border-radius:22px;overflow:hidden;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--gold);aspect-ratio:16/10}
+.side-photo img{width:100%;height:100%;object-fit:cover}
+@media (max-width:940px){.side-photo{display:none}}
+
+.chat{background:var(--paper);border:2px solid var(--ink);border-radius:30px;box-shadow:10px 10px 0 var(--ink);overflow:hidden;display:flex;flex-direction:column;height:min(720px,82vh);min-height:560px}
+.chat-top{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--white);border-bottom:2px solid var(--ink)}
+.chat-top .av{width:46px;height:46px;border-radius:50%;border:2px solid var(--ink);position:relative;flex:none}
+.chat-top .av img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 15%}
+.chat-top .av::after{content:"";position:absolute;right:-1px;bottom:0;width:12px;height:12px;border-radius:50%;background:var(--wa);border:2px solid var(--white)}
+.chat-top b{display:block;font-weight:800}
+.chat-top small{color:var(--soft)}
+.chat-top .restart{margin-left:auto;background:transparent;border:2px solid var(--line);border-radius:10px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700}
+.chat-top .restart:hover{border-color:var(--red);color:var(--red)}
+.progress{height:5px;background:var(--line)}
+.progress i{display:block;height:100%;background:var(--red);width:0;transition:width .4s}
+.log{flex:1;overflow-y:auto;padding:22px 16px 10px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:84%;padding:12px 16px;border-radius:20px;font-size:16px;animation:pop .35s cubic-bezier(.3,1.5,.5,1)}
+.msg.bot{background:var(--white);border:2px solid var(--ink);border-bottom-left-radius:6px;align-self:flex-start;box-shadow:3px 3px 0 var(--ink)}
+.msg.me{background:var(--ink);color:#fff;border-bottom-right-radius:6px;align-self:flex-end;display:flex;gap:10px;align-items:center}
+.msg.me button{background:transparent;border:0;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline;flex:none}
+.msg.old{animation:none}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+.typing{align-self:flex-start;background:var(--white);border:2px solid var(--ink);border-radius:20px;padding:12px 16px;display:flex;gap:5px;box-shadow:3px 3px 0 var(--ink)}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--ink);animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
+.dock{border-top:2px solid var(--line);padding:14px 16px 16px;background:var(--white);display:grid;gap:12px;max-height:55%;overflow-y:auto}
+.opts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.opt{text-align:left;background:var(--white);border:2px solid var(--ink);border-radius:16px;padding:12px 14px;cursor:pointer;display:grid;gap:2px;transition:transform .12s, box-shadow .12s, background .2s;box-shadow:3px 3px 0 var(--ink)}
+.opt:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.opt:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.opt[aria-pressed="true"]{background:var(--gold)}
+.opt .t{font-weight:700}
+.opt .p{font-family:var(--display);font-size:22px;color:var(--red)}
+.opt .p small{font-family:var(--body);font-size:12px;color:var(--soft);font-weight:600}
+.opt .d{font-size:13px;color:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--ink);background:var(--white);border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:600;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.in{display:grid;gap:4px;flex:1;min-width:150px}
+.in label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.in input,.in textarea{background:var(--white);border:2px solid var(--ink);border-radius:14px;padding:12px 14px;width:100%}
+.in textarea{min-height:76px;resize:vertical}
+.go{background:var(--red);color:#fff;border:2px solid var(--ink);border-radius:14px;padding:12px 20px;font-weight:800;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.skip{background:transparent;border:0;text-decoration:underline;font-weight:600;color:var(--soft);cursor:pointer;padding:12px 6px}
+.stepper{display:flex;align-items:center;border:2px solid var(--ink);border-radius:14px;background:var(--white);width:max-content;overflow:hidden}
+.stepper button{width:46px;height:48px;border:0;background:transparent;font-size:22px;font-weight:700;cursor:pointer}
+.stepper button:hover{background:#f6ecd6}
+.stepper output{min-width:46px;text-align:center;font-family:var(--display);font-size:24px}
+.addon-line{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:2px dashed #d9cdb3;border-radius:14px;padding:8px 12px}
+.addon-line span{font-weight:600}
+.addon-line small{color:var(--soft)}
+.hint{font-size:13px;color:var(--soft)}
+.receipt{align-self:stretch;background:var(--white);border:2px solid var(--ink);border-radius:20px;padding:18px;box-shadow:4px 4px 0 var(--ink);animation:pop .4s cubic-bezier(.3,1.5,.5,1)}
+.receipt h3{font-size:24px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.receipt h3 small{font-family:var(--body);font-size:12px;font-weight:700;background:var(--gold);padding:4px 10px;border-radius:999px}
+.r-lines{margin:12px 0;display:grid;gap:6px;font-size:15px}
+.r-lines div{display:flex;justify-content:space-between;gap:12px}
+.r-lines div span:last-child{font-variant-numeric:tabular-nums;font-weight:600;text-align:right}
+.r-lines .soft{color:var(--soft);font-size:14px}
+.r-lines .soft span:last-child{font-weight:500}
+.r-total{border-top:2px dashed var(--ink);padding-top:10px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.r-total b{font-family:var(--display);font-size:28px;color:var(--red);font-weight:400;font-variant-numeric:tabular-nums;text-align:right}
+.r-note{font-size:13px;color:var(--soft);margin-top:8px}
+
+/* Menu */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tab{border:2px solid var(--ink);background:var(--white);border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:#fff}
+.menu-card{background:var(--white);border:2px solid var(--ink);border-radius:28px;padding:30px clamp(18px,4vw,44px);box-shadow:8px 8px 0 var(--ink)}
+.menu-card h3{font-size:clamp(28px,4vw,40px);color:var(--red)}
+.menu-card .sub{color:var(--soft);margin:6px 0 14px}
+.mi{display:flex;align-items:baseline;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mi:last-of-type{border-bottom:0}
+.mi .nm{font-weight:700;font-size:19px}
+.mi .dots{flex:1;border-bottom:2px dotted #cdbf9f;transform:translateY(-5px);min-width:30px}
+.mi .pr{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mi .pr small{font-family:var(--body);font-size:13px;color:var(--soft);font-weight:600}
+.mi .bk{border:2px solid var(--ink);background:var(--gold);border-radius:12px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer}
+.mi .bk:hover{background:var(--red);color:#fff}
+.small{font-size:14px;color:var(--soft);margin-top:16px;font-style:italic}
+.warn{margin-top:26px;background:#fff1ec;border:2px solid var(--red);border-radius:20px;padding:18px 22px;display:flex;gap:14px;align-items:center}
+.warn b{font-family:var(--display);font-size:30px;font-weight:400;line-height:1;width:44px;height:44px;flex:none;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center}
+
+/* Occasions */
+#occasions{background:var(--white);border-top:1px solid var(--line)}
+.occ{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.occ article{border-radius:24px;overflow:hidden;border:2px solid var(--ink);background:var(--paper);transition:transform .2s, box-shadow .2s}
+.occ article:hover{transform:rotate(-1.2deg) translateY(-4px);box-shadow:6px 6px 0 var(--red)}
+.occ .ph{aspect-ratio:1;overflow:hidden;border-bottom:2px solid var(--ink)}
+.occ .ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.occ article:hover .ph img{transform:scale(1.06)}
+.occ .tx{padding:18px}
+.occ h3{font-size:24px;margin-bottom:6px}
+.occ p{color:#4a443c;font-size:15px}
+@media (max-width:900px){.occ{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.occ{grid-template-columns:1fr}}
+
+/* Meet */
+.meet{display:grid;grid-template-columns:.8fr 1.2fr;gap:44px;align-items:center}
+.meet .ph{border-radius:28px;overflow:hidden;border:2px solid var(--ink);box-shadow:-10px 10px 0 var(--gold);aspect-ratio:4/5;background:#4a4846}
+.meet .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 10%}
+.meet blockquote{font-family:var(--display);font-size:clamp(30px,4vw,48px);line-height:1.08;margin:16px 0 20px}
+.meet blockquote span{color:var(--red)}
+.meet p{color:#4a443c;max-width:52ch}
+.meet .sig{font-family:var(--display);font-size:28px;margin-top:20px;color:var(--red)}
+@media (max-width:860px){.meet{grid-template-columns:1fr}.meet .ph{max-width:360px}}
+
+footer{background:var(--red);color:#fff;padding:70px 0 110px;border-top:3px solid var(--ink)}
+footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:30px;align-items:end}
+footer h2{font-size:clamp(46px,8vw,96px)}
+footer h2 span{color:var(--gold)}
+footer .num{font-family:var(--display);font-size:clamp(30px,4vw,44px);margin:10px 0 4px;font-variant-numeric:tabular-nums}
+footer .tag{letter-spacing:.2em;text-transform:uppercase;font-size:13px;font-weight:700;margin-top:24px;opacity:.85}
+footer .pill{color:var(--gold)}
+footer .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+@media (max-width:760px){footer .wrap{grid-template-columns:1fr}}
+
+.fab{position:fixed;right:18px;bottom:18px;z-index:50;width:60px;height:60px;border-radius:20px;background:var(--wa);border:2px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);transform:rotate(-6deg);transition:transform .2s}
+.fab:hover{transform:rotate(0) scale(1.06)}
+.fab svg{width:32px;height:32px;color:#fff}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:var(--gold);color:var(--ink);font-weight:700;border:2px solid var(--ink);padding:12px 18px;border-radius:14px;z-index:60;transition:transform .35s cubic-bezier(.3,1.5,.5,1);box-shadow:3px 3px 0 var(--ink)}
+.toast.on{transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C9 3 3.3 8.6 3.3 15.6c0 2.3.6 4.5 1.8 6.4L3 29l7.2-1.9c1.8 1 3.8 1.5 5.8 1.5 7 0 12.7-5.6 12.7-12.6S23 3 16 3zm0 23.1c-1.9 0-3.7-.5-5.3-1.4l-.4-.2-4.3 1.1 1.1-4.1-.3-.4a10.4 10.4 0 0 1-1.6-5.5C5.2 9.8 10 5.1 16 5.1s10.8 4.7 10.8 10.5S22 26.1 16 26.1zm5.9-7.8c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.2 1.4 3.4c.2.2 2.4 3.6 5.7 5 .8.3 1.4.5 1.9.7.8.2 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.7-.5z"/></symbol>
+  <symbol id="hat" viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"><path d="M11 24c-4 0-6.5-3-6.5-6.2 0-3.6 3-6.3 6.6-6.1C12.4 8 15.8 5.5 20 5.5s7.6 2.5 8.9 6.2c3.6-.2 6.6 2.5 6.6 6.1 0 3.2-2.5 6.2-6.5 6.2"/><path d="M11 22v10h18V22"/><path d="M11 27.5h18"/></g></symbol>
+</defs></svg>
+
+<div class="topbar">
+  <div class="wrap top">
+    <a class="logo" href="#top"><span class="hat"><svg><use href="#hat"/></svg></span><b>Chef Yos</b></a>
+    <nav aria-label="Main"><a href="#kitchen">Food</a><a href="#book">Book</a><a href="#menu">Prices</a><a href="#meet">Meet Yos</a></nav>
+    <a class="btn btn-wa" href="https://wa.me/2348083519434?text=Hello%20Chef%20Yos!" data-wa="Hello Chef Yos!" target="_blank" rel="noopener"><svg><use href="#wa"/></svg>WhatsApp</a>
+  </div>
+</div>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="pill">Private chef · Private dining · Lagos</span>
+      <h1>Your kitchen.<br><span class="r">My cooking.</span></h1>
+      <p id="heroIntro">I'm Chef Yos, your private chef in Lagos. I come to your home every week and cook, so your household eats well all month. Planning one special night instead? I do that too.</p>
+      <div class="ctas">
+        <a class="btn btn-red" href="#book">Start my booking</a>
+        <a class="btn btn-white" href="#kitchen">See the food</a>
+      </div>
+      <div class="proof">
+        <div class="thumbs"><img src="img/salmon-rice.jpg" alt=""><img src="img/plantain-boats.jpg" alt=""><img src="img/canapes.jpg" alt=""><img src="img/small-chops.jpg" alt=""></div>
+        <span>Good food · Great company · Memorable moments</span>
+      </div>
+    </div>
+    <div class="portrait">
+      <div class="frame"><img src="img/chef.jpg" alt="Chef Yos in her chef's whites"></div>
+      <div class="hi">Hi, I'm Yos 👋🏾</div>
+      <div class="plate"><img src="img/salmon-spaghetti.jpg" alt="Spiced salmon with spaghetti"></div>
+      <div class="price">Your own chef from <b id="fromPrice">₦150k</b> a month</div>
+    </div>
+  </div>
+  <div class="marquee" aria-hidden="true"><div class="track" id="track"></div></div>
+</header>
+
+<section id="kitchen">
+  <div class="wrap">
+    <div class="head head-row">
+      <div><span class="pill">Fresh from my kitchen</span><h2>Plates I've <em>made.</em></h2></div>
+      <p style="max-width:40ch;color:#4a443c">Tap any plate to see it bigger. Every one of these can be on your table.</p>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </div>
+</section>
+
+<section id="book">
+  <div class="wrap book-grid">
+    <div>
+      <span class="pill">Bookings &amp; enquiries</span>
+      <div class="head"><h2>Let's plan your <em>meal.</em></h2>
+      <p>Answer a few quick questions. At the end you'll see your chef fee estimate and can send the whole booking to me on WhatsApp in one tap.</p></div>
+      <div class="side-list">
+        <div><span class="n">1</span><p><strong>Pick a service.</strong> A weekly chef plan, or a single dinner or big occasion.</p></div>
+        <div><span class="n">2</span><p><strong>Tell me the details.</strong> Date, guests, area, extras and any cravings.</p></div>
+        <div><span class="n">3</span><p><strong>Send it on WhatsApp.</strong> I'll confirm the menu, availability and grocery costs.</p></div>
+      </div>
+      <div class="side-photo"><img src="img/spread.jpg" alt="A spread of dishes on a kitchen counter"></div>
+    </div>
+    <div class="chat" aria-label="Booking chat with Chef Yos">
+      <div class="chat-top">
+        <span class="av"><img src="img/chef.jpg" alt=""></span>
+        <div><b>Chef Yos</b><small>Private chef · Lagos</small></div>
+        <button class="restart" id="restart" type="button">Start over</button>
+      </div>
+      <div class="progress"><i id="prog"></i></div>
+      <div class="log" id="log" aria-live="polite"></div>
+      <div class="dock" id="dock"></div>
+    </div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="wrap">
+    <span class="pill">Service rate card</span>
+    <div class="head"><h2>The <em>price list</em></h2><p>Every price is my service fee. Tap "Book" on any line to jump into the chat with it picked.</p></div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-monthly" aria-selected="true" aria-controls="menuCard">Monthly chef</button>
+      <button class="tab" role="tab" id="tab-oneoff" aria-selected="false" aria-controls="menuCard">One-off chef</button>
+      <button class="tab" role="tab" id="tab-addons" aria-selected="false" aria-controls="menuCard">Add-ons</button>
+    </div>
+    <div class="menu-card" id="menuCard" role="tabpanel"></div>
+    <div class="warn"><b>!</b><p><strong>Important:</strong> ingredients, groceries, special food requests and logistics are not included in the chef service fee and are charged separately.</p></div>
+  </div>
+</section>
+
+<section id="occasions">
+  <div class="wrap">
+    <span class="pill">Made for</span>
+    <div class="head"><h2>Any reason to <em>eat well.</em></h2></div>
+    <div class="occ">
+      <article><div class="ph"><img src="img/spread.jpg" alt="Several dishes ready on the counter" loading="lazy"></div><div class="tx"><h3>Every week</h3><p>Your own chef one to four times a week, from a monthly plan.</p></div></article>
+      <article><div class="ph"><img src="img/salmon-rice.jpg" alt="Salmon with rice and peppers" loading="lazy"></div><div class="tx"><h3>Date nights</h3><p>A private dinner for two, cooked and served at home.</p></div></article>
+      <article><div class="ph"><img src="img/canapes.jpg" alt="Canapés on crackers" loading="lazy"></div><div class="tx"><h3>Big occasions</h3><p>Birthdays, anniversaries and proposals, with setup if you want it.</p></div></article>
+      <article><div class="ph"><img src="img/small-chops.jpg" alt="Small chops and sides" loading="lazy"></div><div class="tx"><h3>Hosting</h3><p>A premium private dining experience for your guests.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<section id="meet">
+  <div class="wrap meet">
+    <div class="ph"><img src="img/chef.jpg" alt="Portrait of Chef Yos" loading="lazy"></div>
+    <div>
+      <span class="pill">Meet the chef</span>
+      <blockquote>Exceptional meals. <span>Bespoke experiences.</span></blockquote>
+      <p id="aboutText">I'm a private chef based in Lagos. I cook in your home, plan the menu around what you love, and handle the shopping and setup if you need me to. You just sit down and enjoy good food with your people.</p>
+      <div class="sig">— Yos</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
+        <a class="btn btn-red" href="#book">Book me</a>
+        <a class="btn btn-wa" href="https://wa.me/2348083519434?text=Hello%20Chef%20Yos!" data-wa="Hello Chef Yos!" target="_blank" rel="noopener"><svg><use href="#wa"/></svg>Say hello</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div>
+      <h2>Hungry yet? <span>Let's talk.</span></h2>
+      <p class="tag">Good food · Great company · Memorable moments</p>
+    </div>
+    <div>
+      <span class="pill">Bookings &amp; enquiries</span>
+      <div class="num" data-phone>0808 351 9434</div>
+      <p style="opacity:.85">Lagos, Nigeria</p>
+      <div class="ctas">
+        <a class="btn btn-wa" href="https://wa.me/2348083519434?text=Hello%20Chef%20Yos!%20I%27d%20like%20to%20make%20an%20enquiry." data-wa="Hello Chef Yos! I'd like to make an enquiry." target="_blank" rel="noopener"><svg><use href="#wa"/></svg>Chat on WhatsApp</a>
+        <a class="btn btn-white" href="tel:+2348083519434" data-tel>Call</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<a class="fab" href="https://wa.me/2348083519434?text=Hello%20Chef%20Yos!" data-wa="Hello Chef Yos!" target="_blank" rel="noopener" aria-label="Chat with Chef Yos on WhatsApp"><svg><use href="#wa"/></svg></a>
+<div class="toast" id="toast" role="status"></div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo">
+  <button class="x" id="lbX" aria-label="Close">×</button>
+  <button class="nav prev" id="lbP" aria-label="Previous photo">‹</button>
+  <figure><img id="lbImg" alt=""><p id="lbCap"></p></figure>
+  <button class="nav next" id="lbN" aria-label="Next photo">›</button>
+</div>
+<script src="assets/defaults.js"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=window.CHEF_FMT, addonLabel=window.CHEF_ADDON_LABEL;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const AREAS=["Lekki","Ikoyi","Victoria Island","Ajah","Ikeja","Surulere","Yaba","Magodo","Gbagada"];
+const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const OCC=["Your own chef every week","Weekly meal prep","Family dinners","Sunday lunch","Date nights","Birthdays","Anniversaries","House parties"];
+
+let C=window.CHEF_MERGE(null);
+let ONEOFF,MONTHLY,ADDONS,SHOTS,PHONE;
+function applyContent(){
+  ONEOFF=C.oneoff; MONTHLY=C.monthly; ADDONS=C.addons; SHOTS=C.gallery; PHONE=String(C.business.whatsapp||"").replace(/\D/g,"");
+  const b=C.business;
+  document.querySelectorAll("[data-wa]").forEach(a=>{a.href=`https://wa.me/${PHONE}?text=${encodeURIComponent(a.dataset.wa)}`;});
+  document.querySelectorAll("[data-tel]").forEach(a=>{a.href="tel:+"+PHONE;});
+  document.querySelectorAll("[data-phone]").forEach(e=>{e.textContent=b.phoneDisplay;});
+  if(b.heroIntro) $("heroIntro").textContent=b.heroIntro;
+  if(b.about) $("aboutText").textContent=b.about;
+  const minM=Math.min(...MONTHLY.map(s=>+s.price||0));
+  $("fromPrice").textContent=minM>=1000?"₦"+Math.round(minM/1000)+"k":fmt(minM);
+  renderGallery(); menu();
+}
+
+/* ---------- Gallery + lightbox ---------- */
+const g=$("gallery"),lb=$("lb"),lbImg=$("lbImg"),cap=$("lbCap");let cur=0,last=null;
+function renderGallery(){
+  g.innerHTML=SHOTS.map((s,i)=>`<button type="button" class="shot" data-i="${i}"><img src="${esc(s.src)}" alt="${esc(s.caption)}" loading="lazy"><figcaption>${esc(s.caption)}</figcaption></button>`).join("");
+  g.hidden=!SHOTS.length;
+}
+const show=i=>{if(!SHOTS.length)return;cur=(i+SHOTS.length)%SHOTS.length;lbImg.src=SHOTS[cur].src;lbImg.alt=SHOTS[cur].caption;cap.textContent=SHOTS[cur].caption;};
+g.onclick=e=>{const b=e.target.closest(".shot");if(!b)return;last=b;show(+b.dataset.i);lb.hidden=false;$("lbX").focus();};
+const closeLb=()=>{lb.hidden=true;last?.focus();};
+$("lbX").onclick=closeLb;$("lbP").onclick=()=>show(cur-1);$("lbN").onclick=()=>show(cur+1);
+lb.onclick=e=>{if(e.target===lb)closeLb();};
+addEventListener("keydown",e=>{if(lb.hidden)return;if(e.key==="Escape")closeLb();if(e.key==="ArrowLeft")show(cur-1);if(e.key==="ArrowRight")show(cur+1);});
+
+$("track").innerHTML=[...OCC,...OCC].map(o=>`<span>${o}</span>`).join("");
+
+/* ---------- Booking chat ---------- */
+const blank=()=>({type:null,service:null,date:"",time:"19:00",days:[],guests:2,area:"",addons:{},notes:null,name:null});
+let A=blank(), step=0, logged=false;
+const STEPS=["type","service","when","guests","area","addons","notes","name","done"];
+function svc(){return (A.type==="monthly"?MONTHLY:ONEOFF).find(s=>s.id===A.service);}
+function pd(v){if(!v)return"";return new Date(v+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});}
+function pt(v){if(!v)return"";const[h,m]=v.split(":").map(Number);return`${(h%12)||12}:${String(m).padStart(2,"0")}${h<12?"am":"pm"}`;}
+function chosenAddons(){return ADDONS.filter(a=>a.kind==="hourly"?(A.addons[a.id]||0)>0:!!A.addons[a.id]);}
+function addonText(a){return a.kind==="hourly"?`${A.addons[a.id]} × ${a.name.toLowerCase()}`:a.name;}
+
+function ask(k){
+  switch(k){
+    case"type":return"Hi, I'm Chef Yos 👩🏾‍🍳 Welcome to my kitchen! Want me cooking for you every week, or just for one special day?";
+    case"service":return A.type==="monthly"?"Love that. A chef on call every week 🙌🏾 How often should I come through?":"Lovely! Which kind of one-off are we doing?";
+    case"when":return A.type==="monthly"?"When should we start, and which days work best for you?":"Great choice 😋 When should I come through?";
+    case"guests":return A.type==="monthly"?"How many people am I cooking for at home?":"How many people am I feeding?";
+    case"area":return`Where in ${esc(C.business.city||"Lagos")} is the kitchen? This helps me work out logistics.`;
+    case"addons":return"Want any extras with that? Pick as many as you like.";
+    case"notes":return"Any cravings, menu ideas, allergies or things you don't eat? Tell me everything.";
+    case"name":return"Almost done! What name should I put on the booking?";
+    case"done":return`Here's your booking${A.name?", "+esc(A.name.split(" ")[0]):""} ✨ Send it to me on WhatsApp and I'll confirm the menu, the date and the grocery costs.`;
+  }
+}
+function answer(k){
+  const s=svc();
+  switch(k){
+    case"type":return A.type==="monthly"?"A chef every week":"A one-off day or night";
+    case"service":return`${s.name} · ${s.from?"from ":""}${fmt(s.price)}${A.type==="monthly"?"/month":""}`;
+    case"when":return A.type==="monthly"?`Starting ${pd(A.date)} · ${A.days.join(", ")}`:`${pd(A.date)} at ${pt(A.time)}`;
+    case"guests":return`${A.guests} ${A.guests===1?"person":"people"}`;
+    case"area":return A.area;
+    case"addons":{const l=chosenAddons().map(addonText);return l.length?l.join(", "):"No extras, thanks";}
+    case"notes":return A.notes||"Nothing special, surprise me";
+    case"name":return A.name;
+  }
+}
+
+function render(animateLast){
+  if(!C.business.bookingsOpen){
+    $("log").innerHTML=`<div class="msg bot">${esc(C.business.closedMessage||"I'm not taking new bookings right now.")}</div>`;
+    $("dock").innerHTML=`<a class="btn btn-wa" href="https://wa.me/${PHONE}?text=${encodeURIComponent("Hello Chef Yos! When is your next free date?")}" target="_blank" rel="noopener"><svg><use href="#wa"/></svg>Message me on WhatsApp</a>`;
+    $("dock").onclick=null; $("prog").style.width="0"; return;
+  }
+  // If a saved service was removed in the dashboard, go back to that question
+  if(step>1 && !svc()) step=A.type?1:0;
+  const log=$("log");
+  let h="";
+  for(let i=0;i<step;i++){
+    const k=STEPS[i];
+    h+=`<div class="msg bot old">${ask(k)}</div><div class="msg me old"><span>${esc(answer(k))}</span><button type="button" data-edit="${i}" aria-label="Change answer">Change</button></div>`;
+  }
+  log.innerHTML=h;
+  const k=STEPS[step];
+  const finish=()=>{
+    log.insertAdjacentHTML("beforeend",`<div class="msg bot">${ask(k)}</div>`);
+    if(k==="done") log.insertAdjacentHTML("beforeend",receipt());
+    dock(k);
+    log.scrollTop=log.scrollHeight;
+  };
+  $("prog").style.width=(step/(STEPS.length-1)*100)+"%";
+  if(animateLast&&!reduce){
+    $("dock").innerHTML="";
+    log.insertAdjacentHTML("beforeend",`<div class="typing" id="typing"><i></i><i></i><i></i></div>`);
+    log.scrollTop=log.scrollHeight;
+    setTimeout(()=>{$("typing")?.remove();finish();},650);
+  } else finish();
+  save();
+}
+function next(){step++;render(true);}
+function trim(){if(A.type==="monthly"&&svc()){const p=+svc().per||1;while(A.days.length>p)A.days.shift();}}
+const minPrice=l=>l.length?Math.min(...l.map(s=>+s.price||0)):0;
+
+function dock(k){
+  const d=$("dock");
+  if(k==="type"){
+    d.innerHTML=`<div class="opts">
+      <button class="opt" data-v="monthly"><span class="t">A chef every week ⭐</span><span class="d">Monthly plan: home-cooked meals all month</span><span class="p"><small>from </small>${fmt(minPrice(MONTHLY))}<small>/month</small></span></button>
+      <button class="opt" data-v="oneoff"><span class="t">One special day or night</span><span class="d">Dinners, occasions, a day of cooking</span><span class="p"><small>from </small>${fmt(minPrice(ONEOFF))}</span></button></div>`;
+    d.onclick=e=>{const b=e.target.closest("[data-v]");if(!b)return;if(A.type!==b.dataset.v){A.service=null;A.days=[];}A.type=b.dataset.v;next();};
+  }
+  else if(k==="service"){
+    const list=A.type==="monthly"?MONTHLY:ONEOFF;
+    d.innerHTML=`<div class="opts">${list.map(s=>`<button class="opt" data-v="${esc(s.id)}" aria-pressed="${A.service===s.id}"><span class="t">${esc(s.name)}</span>${s.note?`<span class="d">${esc(s.note)}</span>`:""}<span class="p">${s.from?"<small>from </small>":""}${fmt(s.price)}${A.type==="monthly"?"<small>/month</small>":""}</span></button>`).join("")}</div>`;
+    d.onclick=e=>{const b=e.target.closest("[data-v]");if(!b)return;A.service=b.dataset.v;trim();next();};
+  }
+  else if(k==="when"){
+    const t=new Date();t.setMinutes(t.getMinutes()-t.getTimezoneOffset());const min=t.toISOString().slice(0,10);
+    const m=A.type==="monthly", per=m?(+svc().per||1):0;
+    d.innerHTML=`<div class="row"><div class="in"><label for="fDate">${m?"Start date":"Date"}</label><input type="date" id="fDate" min="${min}" value="${A.date}"></div>
+      ${m?"":`<div class="in"><label for="fTime">Serving time</label><input type="time" id="fTime" value="${A.time}"></div>`}</div>
+      ${m?`<div><div class="chips" id="fDays">${DAYS.map(x=>`<button type="button" class="chip" data-d="${x}" aria-pressed="${A.days.includes(x)}">${x}</button>`).join("")}</div><p class="hint" style="margin-top:6px">Pick ${per} day${per>1?"s":""} a week.</p></div>`:""}
+      <div class="row"><button type="button" class="go" id="fGo">Next</button></div>`;
+    const ok=()=>{$("fGo").disabled=!(A.date&&(!m||A.days.length===Math.min(per,7))&&(m||A.time));};
+    $("fDate").oninput=e=>{A.date=e.target.value;ok();};
+    if(!m)$("fTime").oninput=e=>{A.time=e.target.value;ok();};
+    if(m)$("fDays").onclick=e=>{const b=e.target.closest("[data-d]");if(!b)return;const x=b.dataset.d,i=A.days.indexOf(x);if(i>-1)A.days.splice(i,1);else{A.days.push(x);while(A.days.length>per)A.days.shift();}A.days.sort((a,b)=>DAYS.indexOf(a)-DAYS.indexOf(b));$("fDays").querySelectorAll("[data-d]").forEach(c=>c.setAttribute("aria-pressed",A.days.includes(c.dataset.d)));ok();};
+    d.onclick=e=>{if(e.target.id==="fGo"&&!e.target.disabled)next();};
+    ok();
+  }
+  else if(k==="guests"){
+    d.innerHTML=`<div class="row" style="align-items:center"><div class="stepper"><button type="button" data-g="-1" aria-label="Fewer">−</button><output id="fG">${A.guests}</output><button type="button" data-g="1" aria-label="More">+</button></div><button type="button" class="go" id="fGo">That's everyone</button></div>`;
+    d.onclick=e=>{const g=e.target.closest("[data-g]");if(g){A.guests=Math.max(1,Math.min(80,A.guests+Number(g.dataset.g)));$("fG").textContent=A.guests;save();}if(e.target.id==="fGo")next();};
+  }
+  else if(k==="area"){
+    d.innerHTML=`<div class="chips">${AREAS.map(a=>`<button type="button" class="chip" data-a="${a}">${a}</button>`).join("")}</div>
+      <div class="row"><div class="in"><label for="fArea">Or type your area</label><input id="fArea" value="${esc(A.area)}" placeholder="e.g. Lekki Phase 1"></div><button type="button" class="go" id="fGo">Next</button></div>`;
+    const ok=()=>{$("fGo").disabled=!A.area.trim();};
+    $("fArea").oninput=e=>{A.area=e.target.value;ok();};
+    $("fArea").onkeydown=e=>{if(e.key==="Enter"&&A.area.trim())next();};
+    d.onclick=e=>{const c=e.target.closest("[data-a]");if(c){A.area=c.dataset.a;next();}if(e.target.id==="fGo"&&!e.target.disabled)next();};
+    ok();
+  }
+  else if(k==="addons"){
+    if(!ADDONS.length){A.addons={};step++;render(false);return;}
+    const ad=A.addons, chipsA=ADDONS.filter(a=>a.kind!=="hourly"), hourly=ADDONS.filter(a=>a.kind==="hourly");
+    d.innerHTML=`<div class="chips">${chipsA.map(a=>`<button type="button" class="chip" data-x="${esc(a.id)}" aria-pressed="${!!ad[a.id]}">${esc(a.name)} · ${esc(addonLabel(a))}</button>`).join("")}</div>
+      ${hourly.map(a=>`<div class="addon-line"><span>${esc(a.name)} <small>${esc(addonLabel(a))}</small></span><div class="stepper"><button type="button" data-h="${esc(a.id)}" data-n="-1" aria-label="Less">−</button><output id="fH-${esc(a.id)}">${ad[a.id]||0}</output><button type="button" data-h="${esc(a.id)}" data-n="1" aria-label="More">+</button></div></div>`).join("")}
+      <div class="row"><button type="button" class="go" id="fGo">Done</button><button type="button" class="skip" id="fNo">No extras</button></div>`;
+    d.onclick=e=>{
+      const c=e.target.closest("[data-x]");if(c){ad[c.dataset.x]=!ad[c.dataset.x];c.setAttribute("aria-pressed",!!ad[c.dataset.x]);save();}
+      const h=e.target.closest("[data-h]");if(h){const id=h.dataset.h;ad[id]=Math.max(0,Math.min(12,(ad[id]||0)+Number(h.dataset.n)));$("fH-"+id).textContent=ad[id];save();}
+      if(e.target.id==="fGo")next();
+      if(e.target.id==="fNo"){A.addons={};next();}
+    };
+  }
+  else if(k==="notes"){
+    d.innerHTML=`<div class="in"><label for="fN">Menu ideas &amp; dietary needs</label><textarea id="fN" placeholder="Jollof and grilled fish, a light starter, one guest doesn't eat beef…">${esc(A.notes||"")}</textarea></div>
+      <div class="row"><button type="button" class="go" id="fGo">Send to chef</button><button type="button" class="skip" id="fSkip">Skip, surprise me</button></div>`;
+    d.onclick=e=>{if(e.target.id==="fGo"){A.notes=$("fN").value.trim()||null;next();}if(e.target.id==="fSkip"){A.notes=null;next();}};
+  }
+  else if(k==="name"){
+    d.innerHTML=`<div class="row"><div class="in"><label for="fName">Your name</label><input id="fName" autocomplete="name" value="${esc(A.name||"")}" placeholder="Full name"></div><button type="button" class="go" id="fGo">See my booking</button></div>`;
+    const ok=()=>{$("fGo").disabled=!$("fName").value.trim();};
+    $("fName").oninput=ok;
+    $("fName").onkeydown=e=>{if(e.key==="Enter"&&$("fName").value.trim()){A.name=$("fName").value.trim();next();}};
+    d.onclick=e=>{if(e.target.id==="fGo"&&!e.target.disabled){A.name=$("fName").value.trim();next();}};
+    ok();
+  }
+  else if(k==="done"){
+    d.innerHTML=`<a class="btn btn-wa" id="send" href="https://wa.me/${PHONE}?text=${encodeURIComponent(message())}" target="_blank" rel="noopener"><svg><use href="#wa"/></svg>Send booking on WhatsApp</a>
+      <div class="row"><button type="button" class="go" style="background:#fff;color:var(--ink);flex:1" id="copy">Copy booking</button><button type="button" class="skip" id="again">Start a new booking</button></div>`;
+    d.onclick=async e=>{
+      if(e.target.closest("#send")){toast("Opening WhatsApp… 🍽️");logBooking();}
+      if(e.target.id==="copy"){try{await navigator.clipboard.writeText(message());toast("Copied! Paste it into WhatsApp");logBooking();}catch(_){toast("Copy isn't allowed here. Use the WhatsApp button");}}
+      if(e.target.id==="again")restart();
+    };
+  }
+}
+
+function estimate(){
+  const s=svc(),L=[];
+  let min=+s.price||0,max=min,from=!!s.from;
+  L.push([s.name+(A.type==="monthly"?" (monthly)":""),(from?"from ":"")+fmt(s.price)]);
+  chosenAddons().forEach(a=>{
+    const p=+a.price||0;
+    if(a.kind==="range"){min+=p;max+=(+a.priceMax||p);L.push([a.name,addonLabel(a)]);}
+    else if(a.kind==="hourly"){const n=A.addons[a.id];min+=p*n;max+=p*n;L.push([`${a.name} × ${n}`,fmt(p*n)]);}
+    else if(a.kind==="from"){min+=p;max+=p;from=true;L.push([a.name,"from "+fmt(p)]);}
+    else if(a.kind==="quote"){L.push([a.name,a.quoteText||"quoted separately"]);}
+    else {min+=p;max+=p;L.push([a.name,fmt(p)]);}
+  });
+  const total=min===max?(from?"from ":"")+fmt(min):fmt(min)+" – "+fmt(max)+(from?"+":"");
+  return{L,total};
+}
+function receipt(){
+  const e=estimate();
+  const info=A.type==="monthly"
+    ?[["Starts",pd(A.date)],["Days",A.days.join(", ")],["Household",A.guests]]
+    :[["When",`${pd(A.date)}, ${pt(A.time)}`],["Guests",A.guests]];
+  info.push(["Area",A.area]);
+  if(A.notes)info.push(["Notes",A.notes]);
+  return`<div class="receipt"><h3>Your booking <small>${A.type==="monthly"?"MONTHLY":"ONE-OFF"}</small></h3>
+    <div class="r-lines">${e.L.map(([a,b])=>`<div><span>${esc(a)}</span><span>${esc(b)}</span></div>`).join("")}
+    ${info.map(([a,b])=>`<div class="soft"><span>${a}</span><span>${esc(b)}</span></div>`).join("")}</div>
+    <div class="r-total"><span><strong>Chef fee estimate</strong></span><b>${e.total}</b></div>
+    <p class="r-note">Groceries, special food requests and logistics are charged separately. Chef Yos confirms the final price.</p></div>`;
+}
+function message(){
+  const e=estimate(),M=[];
+  M.push("Hello Chef Yos! 👩🏾‍🍳 I'd like to book:","");
+  e.L.forEach(([a,b],i)=>M.push(`${i?"➕":"🍽️"} ${a}: ${b}`));
+  M.push("");
+  if(A.type==="monthly"){M.push(`📅 Start date: ${pd(A.date)}`,`🗓️ Days: ${A.days.join(", ")}`,`👥 Household: ${A.guests}`);}
+  else{M.push(`📅 Date: ${pd(A.date)} at ${pt(A.time)}`,`👥 Guests: ${A.guests}`);}
+  M.push(`📍 Area: ${A.area}`);
+  if(A.notes)M.push(`📝 Notes: ${A.notes}`);
+  M.push("",`Chef fee estimate: ${e.total}`,"I understand groceries, special requests and logistics are charged separately.","",`Name: ${A.name}`);
+  return M.join("\n");
+}
+function logBooking(){
+  if(logged||location.protocol==="file:")return; logged=true;
+  const s=svc();
+  const body=JSON.stringify({name:A.name,type:A.type,service:s.name,date:A.date,time:A.type==="monthly"?"":A.time,days:A.days.join(", "),guests:A.guests,area:A.area,addons:chosenAddons().map(addonText).join(", "),notes:A.notes||"",estimate:estimate().total});
+  try{ if(!(navigator.sendBeacon&&navigator.sendBeacon("/api/bookings",new Blob([body],{type:"text/plain"})))) fetch("/api/bookings",{method:"POST",body,keepalive:true}).catch(()=>{}); }catch(_){}
+}
+
+$("log").addEventListener("click",e=>{const b=e.target.closest("[data-edit]");if(!b)return;step=Number(b.dataset.edit);render(false);});
+function restart(){A=blank();step=0;logged=false;render(true);}
+$("restart").onclick=restart;
+
+/* ---------- Price list ---------- */
+let tab="monthly";
+function menu(){
+  ["monthly","oneoff","addons"].forEach(t=>$("tab-"+t).setAttribute("aria-selected",t===tab));
+  const c=$("menuCard"), note=`<p class="small">Food ingredients/groceries and logistics are charged separately.</p>`;
+  const book=C.business.bookingsOpen;
+  if(tab==="oneoff")c.innerHTML=`<h3>One-off private chef</h3><p class="sub">For a single day or a single night.</p>${ONEOFF.map(s=>`<div class="mi"><span class="nm">${esc(s.name)}</span><span class="dots"></span><span class="pr">${s.from?"<small>from </small>":""}${fmt(s.price)}</span>${book?`<button class="bk" data-b="oneoff:${esc(s.id)}">Book</button>`:""}</div>`).join("")}${note}`;
+  if(tab==="monthly")c.innerHTML=`<h3>Monthly private chef</h3><p class="sub">Most popular. Your own chef, every week of the month.</p>${MONTHLY.map(s=>`<div class="mi"><span class="nm">${esc(s.name)}</span><span class="dots"></span><span class="pr">${fmt(s.price)}<small>/month</small></span>${book?`<button class="bk" data-b="monthly:${esc(s.id)}">Book</button>`:""}</div>`).join("")}${note}`;
+  if(tab==="addons")c.innerHTML=`<h3>Add-ons</h3><p class="sub">Extras you can add to any booking in the chat.</p>${ADDONS.map(a=>`<div class="mi"><span class="nm">${esc(a.name)}</span><span class="dots"></span><span class="pr">${esc(addonLabel(a)).replace(/^from /,"<small>from </small>").replace("/hour","<small>/hour</small>")}</span></div>`).join("")||`<p class="sub">No add-ons right now.</p>`}`;
+}
+["oneoff","monthly","addons"].forEach(t=>$("tab-"+t).onclick=()=>{tab=t;menu();});
+$("menuCard").addEventListener("click",e=>{
+  const b=e.target.closest("[data-b]");if(!b)return;
+  const[t,id]=b.dataset.b.split(":");
+  if(A.type!==t)A.days=[];
+  A.type=t;A.service=id;trim();step=2;
+  render(true);
+  $("book").scrollIntoView({behavior:reduce?"auto":"smooth"});
+  toast("Added to your booking");
+});
+
+let tt;function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("on"),2200);}
+function save(){try{localStorage.setItem("chefyos-chat",JSON.stringify({A,step}));}catch(_){}}
+
+function boot(saved){
+  C=window.CHEF_MERGE(saved);
+  applyContent();
+  let s=null;try{s=JSON.parse(localStorage.getItem("chefyos-chat")||"null");}catch(_){}
+  if(s&&s.A){A=Object.assign(blank(),s.A);if(typeof A.addons!=="object"||!A.addons)A.addons={};step=Math.min(s.step||0,STEPS.length-1);}
+  render(false);
+}
+/* Load the content Chef Yos saved in the dashboard; fall back to the built-in content */
+(async()=>{
+  let saved=null;
+  if(location.protocol!=="file:"){
+    try{
+      const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),2500);
+      const r=await fetch("/api/content",{signal:ctl.signal,cache:"no-store"});clearTimeout(t);
+      if(r.ok&&(r.headers.get("content-type")||"").includes("json"))saved=(await r.json()).content;
+    }catch(_){}
+  }
+  boot(saved);
+})();
+})();
+</script>
+</body>
+</html>
